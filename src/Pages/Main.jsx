@@ -20,6 +20,7 @@ const Main = () => {
         email: authUser.email,
         photoURL: authUser.photoURL,
       };
+
       if (authUser) {
         // the user just logged in / the user was logged in
         dispatch({
