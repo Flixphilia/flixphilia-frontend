@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Cast from './cast';
 import Description from './description';
 import Hero from './hero';
+import Tab from './tab';
 import { actions } from '../../utils/reducer';
 import { useStateValue } from '../../utils/StateProvider';
 
@@ -64,6 +65,7 @@ const SeriesPage = ({ match }) => {
         episodes={currentSeries.seasons[specials ? currentSeason : currentSeason - 1].episode_count}
         yearOfRelease={currentSeries.yearOfRelease}
       />
+      <Tab />
       <Cast cast={currentSeries.cast} />
     </div>
   );

@@ -14,23 +14,23 @@ const Main = () => {
     // will only run once when the app component loads...
 
     auth.onAuthStateChanged((authUser) => {
+      let user = {
+        uid: authUser.uid,
+        displayName: authUser.displayName,
+        email: authUser.email,
+        photoURL: authUser.photoURL,
+      };
       if (authUser) {
         // the user just logged in / the user was logged in
-        let user = {
-          uid: authUser.uid,
-          displayName: authUser.displayName,
-          email: authUser.email,
-          photoURL: authUser.photoURL,
-        };
         dispatch({
           type: actions.SET_USER,
-          user,
+          user: user,
         });
       } else {
         // the user is logged out
         dispatch({
           type: actions.SET_USER,
-          user: null,
+          user: user,
         });
       }
     });
