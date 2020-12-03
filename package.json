@@ -1,6 +1,6 @@
 {
   "name": "flixphilia-frontend",
-  "homepage": "https://flixphilia.netlify.app/"
+  "homepage": "https://flixphilia.netlify.app/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
