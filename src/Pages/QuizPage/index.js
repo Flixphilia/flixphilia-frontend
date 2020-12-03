@@ -1,4 +1,3 @@
-import Box from '@material-ui/core/Box';
 import useGetSeasonQuiz from '../../hooks/useGetSeasonQuiz';
 import { useParams } from 'react-router-dom';
 import QuizCard from './quizCard';

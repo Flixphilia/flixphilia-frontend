@@ -5,14 +5,10 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { actions } from '../context/reducer';
-import { auth } from '../utils/firebase';
 import { fade } from '@material-ui/core/styles';
-import firebase from 'firebase/firebase';
 import makeStyles from '@material-ui/styles/makeStyles';
 import { useAuth } from '../context/AuthProvider';
 import useCountRenders from '../hooks/useCountRenders';
-import { useStateValue } from '../context/StateProvider';
 
 const navBarStyles = makeStyles({
   root: {

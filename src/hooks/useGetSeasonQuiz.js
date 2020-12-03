@@ -29,6 +29,7 @@ const useGetSeasonQuiz = (series, season) => {
     return () => {
       console.log('useGetSeasonQuiz Unmounted');
     };
+    //eslint-disable-next-line
   }, []);
 
   return quizData;

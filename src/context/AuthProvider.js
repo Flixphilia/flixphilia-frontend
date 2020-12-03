@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }) => {
       }
     });
     return unsubscribe;
+    //eslint-disable-next-line
   }, []);
 
   const value = {
