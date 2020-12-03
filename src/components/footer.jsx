@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const StyledFooter = styled.footer`
   display: flex;
-  height: 200px;
+  height: 20px;
   position: sticky;
   bottom: 0;
 `;

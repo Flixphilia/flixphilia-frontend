@@ -1,92 +1,140 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { useStateValue } from '../utils/StateProvider';
+import AppBar from '@material-ui/core/AppBar';
+import Avatar from '@material-ui/core/Avatar';
+import HomeIcon from '@material-ui/icons/Home';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { actions } from '../context/reducer';
+import { auth } from '../utils/firebase';
+import { fade } from '@material-ui/core/styles';
+import firebase from 'firebase/firebase';
+import makeStyles from '@material-ui/styles/makeStyles';
+import { useAuth } from '../context/AuthProvider';
+import useCountRenders from '../hooks/useCountRenders';
+import { useStateValue } from '../context/StateProvider';
 
-const StyledNavBar = styled.nav`
-  display: flex;
-  place-items: center;
-  justify-content: space-between;
-  padding: 8px;
-  position: sticky;
-  top: 0;
-  background-color: #1c1c1cd4;
-`;
+const navBarStyles = makeStyles({
+  root: {
+    backgroundColor: 'rgba(28,28,28,0.85)',
+    flexFlow: 'row',
+    justifyContent: 'space-between',
+  },
 
-const Logo = styled.div`
-  color: white;
-  padding: 8px;
-  font-size: 30px;
-  margin-left: 10px;
-  margin-bottom: -2px;
-`;
+  title: {
+    fontSize: '28px',
+    padding: '8px',
+  },
 
-const LogoName = styled.span`
-  letter-spacing: 1px;
-`;
+  avatar: {
+    marginLeft: '16px',
+    cursor: 'pointer',
+    height: '38px',
+    width: '38px',
+  },
 
-const UserDetails = styled.p`
-  display: flex;
-  place-items: center;
-`;
+  search: {
+    position: 'relative',
+    backgroundColor: fade('#fff', 0.15),
+    '&:hover': {
+      backgroundColor: fade('#fff', 0.25),
+    },
+    marginLeft: 0,
+    width: '240px',
+    height: 'fit-content',
+    borderRadius: '24px',
+  },
 
-const StyledSearch = styled.div`
-  padding: 8px;
-  margin-right: 20px;
-  margin-bottom: 7px;
-`;
+  searchIcon: {
+    padding: '0 12px',
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+  },
 
-const SearchInput = styled.input`
-  border-radius: 16px;
-  padding: 8px;
-  border: none;
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: '8px 8px 8px 42px',
+    width: '100%',
+  },
+  username: {
+    padding: '12px 0 12px 12px',
+  },
+});
 
-  &:focus {
-    outline: none;
-  }
-`;
+const SearchBar = ({ classes }) => (
+  <div className={classes.search}>
+    <div className={classes.searchIcon}>
+      <SearchIcon />
+    </div>
 
-const SearchButton = styled.button`
-  border-radius: 50%;
-  border: none;
-  margin-left: 10px;
-  background-color: green;
-  color: white;
-  font-size: 20px;
-  width: 40px;
-  height: 40px;
-
-  &:focus {
-    outline: none;
-  }
-
-  span {
-    vertical-align: middle;
-  }
-`;
+    <InputBase
+      placeholder="Search…"
+      classes={{
+        root: classes.inputRoot,
+        input: classes.inputInput,
+      }}
+      inputProps={{ 'aria-label': 'search' }}
+    />
+  </div>
+);
 
 const NavBar = () => {
-  //eslint-disable-next-line
-  const [{ user }, dispatch] = useStateValue();
+  console.log('NavBar: ', useCountRenders());
+
+  // const [{ user }, dispatch] = useStateValue();
+  const classes = navBarStyles();
+  const { currentUser } = useAuth();
+
+  // const handlelogin = () => {
+  //   const provider = new firebase.auth.GoogleAuthProvider();
+  //   auth
+  //     .signInWithPopup(provider)
+  //     .then((authUser) => {
+  //       dispatch({
+  //         type: actions.SET_USER,
+  //         user: authUser.user,
+  //       });
+  //     })
+  //     .catch((error) => alert(error.message));
+  // };
+
+  // const handlelogout = () => {
+  //   alert('This will Sign You Out');
+  //   auth.signOut();
+  //   window.location.reload();
+  // };
+
+  console.log(currentUser);
+  const { photoURL, uid } = currentUser;
+
+  // const label = uid === undefined ? 'Login' : displayName.split(' ')[0];
 
   return (
-    <StyledNavBar>
-      <Logo>
-        <LogoName>
-          <Link to="/">FlixPhilia</Link>
-        </LogoName>
-      </Logo>
+    <AppBar className={classes.root} position="sticky">
+      <Toolbar>
+        <HomeIcon />
+        <Typography className={classes.title} noWrap>
+          FlixPhilia
+        </Typography>
+      </Toolbar>
 
-      <UserDetails>{JSON.stringify(user.displayName)}</UserDetails>
+      <Toolbar>
+        <SearchBar classes={classes} />
 
-      <StyledSearch>
-        <form>
-          <SearchInput />
-          <SearchButton>
-            <span className="fa fa-search"></span>
-          </SearchButton>
-        </form>
-      </StyledSearch>
-    </StyledNavBar>
+        {uid && <Avatar src={photoURL} className={classes.avatar} />}
+        <Typography
+          className={classes.username}
+          // onClick={uid === undefined ? handlelogin : null}
+        >
+          {}
+        </Typography>
+      </Toolbar>
+    </AppBar>
   );
 };
 

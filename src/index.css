@@ -6,12 +6,8 @@ body {
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #1c1c1c;
-  color: white;
-}
 
-body > * {
-  font-family: 'Grandstander', cursive;
+  color: white;
 }
 
 code {

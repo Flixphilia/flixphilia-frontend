@@ -1,20 +1,25 @@
-import { initialState, reducer } from './utils/reducer';
+import { initialState, reducer } from './context/reducer';
 
 import Footer from './components/footer';
-import Main from './Pages/Main.jsx';
 import NavBar from './components/navBar';
-import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { StateProvider } from './utils/StateProvider';
+import Routes from './Routes';
+import { StateProvider } from './context/StateProvider';
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
+import theme from './styles/theme';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const App = () => {
   return (
     <StateProvider initialState={initialState} reducer={reducer}>
-      <Router>
-        <NavBar />
-        <Main />
-        <Footer />
-      </Router>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <CssBaseline />
+          <NavBar />
+          <Routes />
+          <Footer />
+        </Router>
+      </ThemeProvider>
     </StateProvider>
   );
 };

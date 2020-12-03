@@ -1,21 +1,33 @@
-import React from 'react';
-import styled from 'styled-components';
+import { Box } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles/';
+import { useStateValue } from '../../context/StateProvider';
 
-const StyledHero = styled.div`
-  padding: 16px;
-`;
+const heroStyles = makeStyles({
+  root: {
+    height: 'fit-content',
+  },
+  image: {
+    width: '100%',
+    borderWidth: '2px',
+    borderStyle: 'solid',
+    borderColor: 'white',
+    borderRadius: '16px',
+  },
+});
 
-const HeroImage = styled.img`
-  width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 0 8px green;
-`;
+const Hero = () => {
+  const [{ series }] = useStateValue();
 
-const Hero = ({ poster, alt }) => {
+  const { name, imgUrl } = series;
+
+  const classes = heroStyles();
   return (
-    <StyledHero>
-      <HeroImage src={poster} alt={alt}></HeroImage>
-    </StyledHero>
+    <Container className={classes.root}>
+      <Box>
+        <img src={imgUrl} alt={name} className={classes.image} />
+      </Box>
+    </Container>
   );
 };
 
