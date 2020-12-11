@@ -1,14 +1,16 @@
 import AppBar from '@material-ui/core/AppBar';
-import Avatar from '@material-ui/core/Avatar';
-import HomeIcon from '@material-ui/icons/Home';
+import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import { fade } from '@material-ui/core/styles';
 import makeStyles from '@material-ui/styles/makeStyles';
-import { useAuth } from '../context/AuthProvider';
 import useCountRenders from '../hooks/useCountRenders';
+import { useAuth } from '../hooks/useAuth';
+
+import { useHistory } from 'react-router-dom';
 
 const navBarStyles = makeStyles({
   root: {
@@ -82,47 +84,43 @@ const SearchBar = ({ classes }) => (
 const NavBar = () => {
   console.log('NavBar: ', useCountRenders());
 
-  // const [{ user }, dispatch] = useStateValue();
   const classes = navBarStyles();
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
+  const history = useHistory();
 
-  // const handlelogin = () => {
-  //   const provider = new firebase.auth.GoogleAuthProvider();
-  //   auth
-  //     .signInWithPopup(provider)
-  //     .then((authUser) => {
-  //       dispatch({
-  //         type: actions.SET_USER,
-  //         user: authUser.user,
-  //       });
-  //     })
-  //     .catch((error) => alert(error.message));
-  // };
+  const hidden = history.location.pathname === '/auth/login';
 
-  // const handlelogout = () => {
-  //   alert('This will Sign You Out');
-  //   auth.signOut();
-  //   window.location.reload();
-  // };
+  const { photoURL } = currentUser;
 
-  console.log(currentUser);
-  const { photoURL, uid } = currentUser;
-
-  // const label = uid === undefined ? 'Login' : displayName.split(' ')[0];
+  const handleLogout = async () => {
+    await logout(() => {
+      window.location.reload();
+    });
+  };
 
   return (
     <AppBar className={classes.root} position="sticky">
       <Toolbar>
-        <HomeIcon />
-        <Typography className={classes.title} noWrap>
-          FlixPhilia
-        </Typography>
+        <Link href="/" underline="none">
+          <Typography className={classes.title} noWrap>
+            FlixPhilia
+          </Typography>
+        </Link>
       </Toolbar>
 
       <Toolbar>
         <SearchBar classes={classes} />
 
-        {uid && <Avatar src={photoURL} className={classes.avatar} />}
+        {currentUser ? (
+          <Link onClick={handleLogout} component="button" underline="none">
+            <Typography className={classes.username}>Logout</Typography>
+          </Link>
+        ) : hidden ? null : (
+          <Link href="/auth/login" underline="none" color="primary">
+            <Typography className={classes.username}>Login</Typography>
+          </Link>
+        )}
+
         <Typography
           className={classes.username}
           // onClick={uid === undefined ? handlelogin : null}

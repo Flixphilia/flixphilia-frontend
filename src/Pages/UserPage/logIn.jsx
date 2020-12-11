@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
@@ -11,80 +13,90 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useAuth } from '../../context/AuthProvider';
 import { useHistory } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
-    maxWidth: 1000,
-    margin: '50px auto',
-    backgroundColor: theme.palette.background.default,
+    height: '85vh',
+    width: 800,
+    margin: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      height: '80vh',
+      width: '100%',
+      margin: 0,
+    },
   },
   image: {
     backgroundImage:
       'url(https://pure-lake-91665.herokuapp.com/api/homepage/random)',
     backgroundRepeat: 'no-repeat',
-    backgroundColor:
-      theme.palette.type === 'light'
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
-    backgroundSize: 'auto',
-    backgroundPosition: 'center',
-    maxWidth: 500,
-    // height: 'inherit',
-    // width: 'inherit',
+    backgroundSize: 'contain',
+    maxWidth: 400,
   },
   paper: {
     margin: theme.spacing(6, 4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    maxWidth: 400,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      margin: 0,
+    },
   },
   avatar: {
-    margin: theme.spacing(2, 1),
+    margin: theme.spacing(0, 1),
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(2),
-    // color: theme.palette.primary.main,
   },
   or: {
     color: theme.palette.primary.main,
     margin: theme.spacing(-1.5, 20, -2.5, 20),
     fontSize: '23px',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '13px',
+    },
   },
   submit: {
     margin: theme.spacing(4, 'auto'),
     padding: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      margin: theme.spacing(2, 'auto'),
+    },
   },
 }));
 
 const LoginPage = () => {
   const classes = useStyles();
   const { currentUser, loginWithGoogle, login } = useAuth();
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  const email = useRef('');
+  const username = useRef('');
   const password = useRef('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { uid } = currentUser;
 
   const history = useHistory();
 
   const handleLogIn = async (event) => {
     event.preventDefault();
-
     setLoading(true);
     setError('');
+
     try {
-      await login(email.current.value, password.current.value);
+      const response = await login(
+        { username: 'testusername', password: 'admin' },
+        () => {
+          history.push('/user');
+        }
+      );
+      console.log(response);
     } catch (error) {
       setError('Failed to Login!');
     }
+
     setLoading(false);
   };
 
@@ -100,7 +112,7 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (uid !== undefined) {
+    if (currentUser) {
       history.push('/user');
     }
     //eslint-disable-next-line
@@ -110,8 +122,10 @@ const LoginPage = () => {
     <Grid container component={Paper} elevation={6} className={classes.root}>
       <CssBaseline />
       {error && console.log(error)}
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Hidden smDown>
+        <Grid item md={6} className={classes.image} />
+      </Hidden>
+      <Grid item sm={12} md={6} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
@@ -125,13 +139,13 @@ const LoginPage = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="User Name"
+              name="username"
+              autoComplete="username"
               autoFocus
-              ref={email}
-              value={email.current.value}
+              ref={username}
+              value={username.current.value}
             />
             <TextField
               variant="outlined"
@@ -151,10 +165,11 @@ const LoginPage = () => {
               fullWidth
               variant="contained"
               color="primary"
+              disabled={loading}
               className={classes.submit}
               onClick={handleLogIn}
             >
-              Log In
+              {loading ? <CircularProgress size={24} /> : 'Log In'}
             </Button>
             <Typography className={classes.or}>OR</Typography>
             <Button

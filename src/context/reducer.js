@@ -1,8 +1,7 @@
 import { currentSeason, series } from './data';
 
 export const initialState = {
-  series: series,
-
+  series: {},
   currentSeason: currentSeason,
 };
 

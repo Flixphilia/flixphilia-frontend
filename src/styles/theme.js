@@ -1,4 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
+const breakpoints = createBreakpoints({});
 
 const theme = createMuiTheme({
   palette: {
@@ -20,6 +22,12 @@ const theme = createMuiTheme({
   props: {
     MuiButtonBase: {
       disableRipple: true,
+    },
+    MuiCircularProgress: {
+      size: 24,
+      [breakpoints.up('md')]: {
+        size: 16,
+      },
     },
   },
 

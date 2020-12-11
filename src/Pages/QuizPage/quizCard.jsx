@@ -6,16 +6,51 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Button from '@material-ui/core/Button';
 import { useState } from 'react';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import { Divider, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 300,
-    margin: '20px auto',
+    maxWidth: 800,
+    borderRadius: 20,
+    margin: '60px auto 20px',
+    backgroundColor: '#383737',
+    padding: 16,
+    // marginTop: 150,
   },
+  // form: {
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   formControl: {
-    margin: theme.spacing(3),
+    // margin: theme.spacing(2),
+    alignItems: 'center',
+    width: '100%',
+  },
+  radioGroup: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '80%',
+    justifyContent: 'center',
+    // padding: '0px auto',
+  },
+  option: {
+    marginTop: 10,
+    backgroundImage: 'linear-gradient(left,#e35bf7,#ef141b)',
+    borderRadius: 20,
+    width: '40%',
+    margin: '0 auto',
+
+    // color: '#474545',
+  },
+  questionNumber: {
+    color: '#aaa',
+    width: '100%',
+    textAlign: 'center',
+    fontSize: '16px',
+    marginBottom: 2,
+    // margin: '5px 0',
   },
   button: {
     // margin: '10px auto',
@@ -23,15 +58,22 @@ const useStyles = makeStyles((theme) => ({
     width: 250,
   },
   question: {
-    color: theme.palette.primary.main,
-    marginBottom: 10,
+    color: 'white',
+    fontSize: 22,
+    fontStyle: 'italic',
+    margin: '10px 0 12px',
+  },
+  border: {
+    height: '2px',
+    backgroundColor: '#474545',
   },
 }));
 
 const QuizCard = ({ quizData }) => {
   const classes = useStyles();
-
+  const [quizAnswer] = useLocalStorage('quizAnswer', []);
   const [value, setValue] = useState('');
+  // console.log(quizAnswer, quizData);
 
   //SnackBar Logic
   const [show, setShow] = useState(false);
@@ -57,39 +99,51 @@ const QuizCard = ({ quizData }) => {
 
   return (
     <Card className={classes.root}>
-      <form onSubmit={handleSubmit}>
+      <Typography className={classes.questionNumber}>
+        Question-{quizAnswer.findIndex((item) => item._id === quizData._id) + 1}
+        /10
+      </Typography>
+      <Divider className={classes.border} />
+      <form onSubmit={handleSubmit} className={classes.form}>
         <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel className={classes.question}>
-            {quizData.question}
+          <FormLabel>
+            <Typography className={classes.question}>
+              {quizData.question}
+            </Typography>
           </FormLabel>
           <RadioGroup
             aria-label="quiz"
             name="quiz"
             value={value}
             onChange={handleRadioChange}
+            className={classes.radioGroup}
           >
             <FormControlLabel
               value="option1"
-              control={<Radio color="primary" disabled={show} />}
+              control={<Radio disabled={show} />}
               label={quizData.option1}
+              className={classes.option}
             />
             <FormControlLabel
               value="option2"
-              control={<Radio color="primary" disabled={show} />}
+              control={<Radio disabled={show} />}
               label={quizData.option2}
+              className={classes.option}
             />
             <FormControlLabel
               value="option3"
-              control={<Radio color="primary" disabled={show} />}
+              control={<Radio disabled={show} />}
               label={quizData.option3}
+              className={classes.option}
             />
             <FormControlLabel
               value="option4"
-              control={<Radio color="primary" disabled={show} />}
+              control={<Radio disabled={show} />}
               label={quizData.option4}
+              className={classes.option}
             />
           </RadioGroup>
-          <Button
+          {/* <Button
             type="submit"
             variant="contained"
             color="primary"
@@ -97,10 +151,14 @@ const QuizCard = ({ quizData }) => {
             disabled={show}
           >
             Check Answer
-          </Button>
+          </Button> */}
         </FormControl>
       </form>
       {show && <Alert severity={severity}>{message}</Alert>}
+      {/* <pre>
+        "data"
+        {JSON.stringify(quizAnswer.find((item) => item._id === quizData._id))}
+      </pre> */}
     </Card>
   );
 };

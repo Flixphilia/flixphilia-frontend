@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
+import Hidden from '@material-ui/core/Hidden';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
@@ -11,33 +12,34 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { actions } from '../../context/reducer';
-import { auth } from '../../utils/firebase';
 import { makeStyles } from '@material-ui/core/styles';
+import { useAuth } from '../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
-import { useStateValue } from '../../context/StateProvider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
-    maxWidth: 1000,
-    margin: '50px auto',
+    height: '86vh',
+    width: 800,
+    margin: 'auto',
+    [theme.breakpoints.down('sm')]: {
+      height: '80vh',
+      width: '100%',
+      margin: 0,
+    },
   },
   image: {
     backgroundImage:
       'url(https://pure-lake-91665.herokuapp.com/api/homepage/random)',
     backgroundRepeat: 'no-repeat',
-    backgroundSize: 'auto',
-    backgroundPosition: 'center',
-    maxWidth: 500,
-    // height: 'inherit',
-    // width: 'inherit',
+    backgroundSize: 'contain',
+    maxWidth: 400,
   },
   paper: {
     margin: theme.spacing(6, 4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    maxWidth: 400,
   },
   avatar: {
     margin: theme.spacing(-1, 1, 1.5, 1),
@@ -45,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.white,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(0),
   },
   submit: {
@@ -59,36 +60,59 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUpPage = () => {
   const classes = useStyles();
-  const [{ user }, dispatch] = useStateValue();
+  const { currentUser } = useAuth();
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { signUp } = useAuth();
 
-  const handleSignUp = (event) => {
+  const firstName = useRef('');
+  const lastName = useRef('');
+  const username = useRef('');
+  const email = useRef('');
+  const password = useRef('');
+
+  useEffect(() => {
+    if (currentUser !== false) history.push('/');
+  }, []);
+
+  const handleSignUp = async (event) => {
     event.preventDefault();
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((authUser) => {
-        console.log(authUser);
-        let changeRequest = user.profileChangeRequest();
-        changeRequest.displayName = 'John Doe';
-        changeRequest.commitChangesWithCompletion();
-        dispatch({
-          type: actions.SET_USER,
-          user: authUser.user,
-        });
-        history.push('/user');
-      })
-      .catch((error) => {
-        console.error('Failed!');
-      });
+    setLoading(true);
+
+    // const user = {
+    //   firstName,
+    //   lastName,
+    //   username,
+    //   email,
+    //   password,
+    // };
+
+    const user = {
+      username: 'testusername',
+      email: 'admin@admin.com',
+      password: 'admin',
+      first_name: 'Admin',
+      last_name: 'Admin',
+    };
+
+    console.log(user);
+
+    try {
+      const response = await signUp(user);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
   };
+
   return (
     <Grid container component={Paper} elevation={6} className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Hidden smDown>
+        <Grid item md={6} className={classes.image} />
+      </Hidden>
+      <Grid item sm={12} md={6} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
@@ -103,20 +127,36 @@ const SignUpPage = () => {
               variant="outlined"
               margin="normal"
               required
-              fullWidth
               id="firstName"
               label="First Name"
+              ref={firstName}
+              value={firstName.current.value}
               autoFocus
+              style={{ width: '48.5%' }}
             />
             <TextField
               variant="outlined"
               margin="normal"
               required
-              fullWidth
               id="lastName"
               label="Last Name"
               name="lastName"
+              ref={lastName}
+              value={lastName.current.value}
               autoComplete="lname"
+              style={{ width: '48.5%', marginLeft: '10px' }}
+            />
+            <TextField
+              autoComplete="uname"
+              name="userName"
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="userName"
+              ref={username}
+              value={username.current.value}
+              label="Username"
             />
             <TextField
               variant="outlined"
@@ -125,10 +165,8 @@ const SignUpPage = () => {
               fullWidth
               label="Email Address"
               name="email"
-              value={email}
-              onChange={(event) => {
-                setEmail(event.target.value);
-              }}
+              ref={email}
+              value={email.current.value}
               autoComplete="email"
             />
             <TextField
@@ -139,10 +177,8 @@ const SignUpPage = () => {
               name="password"
               label="Password"
               type="password"
-              value={password}
-              onChange={(event) => {
-                setPassword(event.target.value);
-              }}
+              ref={password}
+              value={password.current.value}
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -155,12 +191,13 @@ const SignUpPage = () => {
               fullWidth
               variant="contained"
               color="primary"
+              disabled={loading}
               className={classes.submit}
               onClick={handleSignUp}
             >
-              Sign Up
+              {loading ? <CircularProgress /> : 'Sign Up'}
             </Button>
-            <Grid container justify="flex-end">
+            <Grid container>
               <Grid item>
                 <Link href="/auth/login" variant="body2">
                   Already have an account? Sign in

@@ -6,24 +6,25 @@ import Typography from '@material-ui/core/Typography';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useStateValue } from '../../context/StateProvider';
+import { useAuth } from '../../hooks/useAuth';
 
 const UserPage = () => {
-  const [{ user }] = useStateValue();
-  const { displayName, photoURL, email, uid } = user;
+  // const [{ user }] = useStateValue();
+
   const history = useHistory();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    if (uid === undefined) {
+    if (currentUser === false) {
       history.push('/auth/login');
     }
-  }, [uid, history]);
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <Container display="flex">
-      <Box>
-        <Typography>{displayName}</Typography>
-        <Typography>{email}</Typography>
-        <img src={photoURL} alt={displayName} />
+      <Box color="white">
+        <pre>{JSON.stringify(currentUser, null, 2)}</pre>
       </Box>
     </Container>
   );

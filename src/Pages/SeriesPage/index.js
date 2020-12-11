@@ -12,7 +12,7 @@ const SeriesPage = ({ match }) => {
 
   useEffect(() => {
     const getSeriesData = async () => {
-      axios
+      await axios
         .get('/series/' + match.params.series)
         .then((response) => {
           console.log('Fetch API Works!');
