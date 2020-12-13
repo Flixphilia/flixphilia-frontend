@@ -1,5 +1,4 @@
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -89,8 +88,6 @@ const NavBar = () => {
   const history = useHistory();
 
   const hidden = history.location.pathname === '/auth/login';
-
-  const { photoURL } = currentUser;
 
   const handleLogout = async () => {
     await logout(() => {

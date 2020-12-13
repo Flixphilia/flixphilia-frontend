@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const signUp = (user) => {
     const data = {
-      email: user.data,
+      email: user.email,
       password: user.password,
       username: user.username,
       first_name: user.firstName,

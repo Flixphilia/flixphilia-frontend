@@ -174,8 +174,8 @@ export const user = {
   uid: undefined,
 };
 
-let currentSeason = 1;
-if (localStorage.getItem('currentSeason')) {
-  currentSeason = JSON.parse(localStorage.getItem('currentSeason'));
-}
-export { currentSeason };
+// let currentSeason = 1;
+// if (localStorage.getItem('currentSeason')) {
+//   currentSeason = JSON.parse(localStorage.getItem('currentSeason'));
+// }
+// export { currentSeason };

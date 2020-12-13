@@ -22,6 +22,7 @@ const useLocalStorage = (key, initialValue) => {
         setValue(event.newValue || initialValue);
       }
     },
+    //eslint-disable-next-line
     [storedValue]
   );
 

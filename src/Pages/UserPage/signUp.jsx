@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
-import Hidden from '@material-ui/core/Hidden';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useAuth } from '../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
+import useInput from '../../hooks/useInput';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,38 +64,36 @@ const SignUpPage = () => {
   const { currentUser } = useAuth();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-
   const { signUp } = useAuth();
-
-  const firstName = useRef('');
-  const lastName = useRef('');
-  const username = useRef('');
-  const email = useRef('');
-  const password = useRef('');
+  const [firstName, bindFirstName] = useInput('');
+  const [lastName, bindLastName] = useInput('');
+  const [username, bindUsername] = useInput('');
+  const [email, bindEmail] = useInput('');
+  const [password, bindPassword] = useInput('');
 
   useEffect(() => {
-    if (currentUser !== false) history.push('/');
-  }, []);
+    currentUser && history.push('/');
+  }, [currentUser, history]);
 
   const handleSignUp = async (event) => {
     event.preventDefault();
     setLoading(true);
 
-    // const user = {
-    //   firstName,
-    //   lastName,
-    //   username,
-    //   email,
-    //   password,
-    // };
-
     const user = {
-      username: 'testusername',
-      email: 'admin@admin.com',
-      password: 'admin',
-      first_name: 'Admin',
-      last_name: 'Admin',
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
     };
+
+    // const user = {
+    //   username: 'testusername',
+    //   email: 'admin@admin.com',
+    //   password: 'admin',
+    //   first_name: 'Admin',
+    //   last_name: 'Admin',
+    // };
 
     console.log(user);
 
@@ -122,63 +121,55 @@ const SignUpPage = () => {
           </Typography>
           <form className={classes.form}>
             <TextField
+              {...bindFirstName}
               autoComplete="fname"
-              name="firstName"
+              // name="firstName"
               variant="outlined"
               margin="normal"
               required
               id="firstName"
               label="First Name"
-              ref={firstName}
-              value={firstName.current.value}
               autoFocus
               style={{ width: '48.5%' }}
             />
             <TextField
+              {...bindLastName}
               variant="outlined"
               margin="normal"
               required
               id="lastName"
               label="Last Name"
-              name="lastName"
-              ref={lastName}
-              value={lastName.current.value}
               autoComplete="lname"
               style={{ width: '48.5%', marginLeft: '10px' }}
             />
             <TextField
+              {...bindUsername}
               autoComplete="uname"
-              name="userName"
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="userName"
-              ref={username}
-              value={username.current.value}
               label="Username"
             />
             <TextField
+              {...bindEmail}
               variant="outlined"
               margin="normal"
               required
               fullWidth
               label="Email Address"
-              name="email"
-              ref={email}
-              value={email.current.value}
               autoComplete="email"
             />
             <TextField
+              {...bindPassword}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              name="password"
+              // name="password"
               label="Password"
               type="password"
-              ref={password}
-              value={password.current.value}
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -200,7 +191,7 @@ const SignUpPage = () => {
             <Grid container>
               <Grid item>
                 <Link href="/auth/login" variant="body2">
-                  Already have an account? Sign in
+                  Already have an account? Log in
                 </Link>
               </Grid>
             </Grid>

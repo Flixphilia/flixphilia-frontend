@@ -2,15 +2,11 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import LoginPage from './logIn';
 import SignUpPage from './signUp';
-import Typography from '@material-ui/core/Typography';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useStateValue } from '../../context/StateProvider';
 import { useAuth } from '../../hooks/useAuth';
 
 const UserPage = () => {
-  // const [{ user }] = useStateValue();
-
   const history = useHistory();
   const { currentUser } = useAuth();
 

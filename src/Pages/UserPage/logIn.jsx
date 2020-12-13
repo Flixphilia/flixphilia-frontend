@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -13,8 +13,9 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useHistory } from 'react-router-dom';
+import useInput from '../../hooks/useInput';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
-    margin: theme.spacing(0, 1),
+    margin: theme.spacing(-1, 1, 1.5, 1),
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   or: {
     color: theme.palette.primary.main,
-    margin: theme.spacing(-1.5, 20, -2.5, 20),
+    margin: theme.spacing(-2, 20, -3, 20),
     fontSize: '23px',
     [theme.breakpoints.down('sm')]: {
       fontSize: '13px',
@@ -73,12 +74,16 @@ const useStyles = makeStyles((theme) => ({
 const LoginPage = () => {
   const classes = useStyles();
   const { currentUser, loginWithGoogle, login } = useAuth();
-  const username = useRef('');
-  const password = useRef('');
+  const [username, bindUsername] = useInput('');
+  const [password, bindPassword] = useInput('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const history = useHistory();
+
+  useEffect(() => {
+    currentUser && history.push('/');
+  }, [currentUser, history]);
 
   const handleLogIn = async (event) => {
     event.preventDefault();
@@ -86,13 +91,9 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await login(
-        { username: 'testusername', password: 'admin' },
-        () => {
-          history.push('/user');
-        }
-      );
-      console.log(response);
+      await login({ username, password }, () => {
+        history.push('/user');
+      });
     } catch (error) {
       setError('Failed to Login!');
     }
@@ -135,30 +136,25 @@ const LoginPage = () => {
           </Typography>
           <form className={classes.form} noValidate>
             <TextField
+              {...bindUsername}
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="username"
               label="User Name"
-              name="username"
-              autoComplete="username"
               autoFocus
-              ref={username}
-              value={username.current.value}
             />
             <TextField
+              {...bindPassword}
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
-              ref={password}
-              value={password.current.value}
             />
             <Button
               type="submit"

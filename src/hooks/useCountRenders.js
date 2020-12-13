@@ -1,4 +1,4 @@
-const { useRef } = require('react');
+import { useRef } from 'react';
 
 const useCountRenders = () => {
   const renders = useRef(0);

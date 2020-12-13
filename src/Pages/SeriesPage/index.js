@@ -1,51 +1,50 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import Description from './description';
 import Hero from './hero';
 import { actions } from '../../context/reducer';
-import axios from '../../utils/axios';
 import { useStateValue } from '../../context/StateProvider';
+import useGetSeasonData from '../../hooks/useGetSeasonData';
+import { useParams } from 'react-router-dom';
+import Loader from '../../components/loader';
 
-const SeriesPage = ({ match }) => {
-  const [{ series }, dispatch] = useStateValue();
-  const [currentSeries, setSeries] = useState(series);
+const SeriesPage = () => {
+  const { series, season } = useParams();
+  //eslint-disable-next-line
+  const [{}, dispatch] = useStateValue();
+  // const [currentSeries, setSeries] = useState(series);
 
-  useEffect(() => {
-    const getSeriesData = async () => {
-      await axios
-        .get('/series/' + match.params.series)
-        .then((response) => {
-          console.log('Fetch API Works!');
-          setSeries(response.data);
-          // isLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    getSeriesData();
-    // eslint-disable-next-line
-  }, []);
+  console.log(series, season);
+
+  const [currentSeries, loading] = useGetSeasonData(series, dispatch);
 
   useEffect(() => {
-    dispatch({
-      type: actions.UPDATE_SERIES,
-      series: currentSeries,
-    });
     // dispatch({
-    //   type: actions.UPDATE_SEASON,
-    //   currentSeason: 1,
+    //   type: actions.UPDATE_SERIES,
+    //   series: currentSeries,
     // });
+    dispatch({
+      type: actions.UPDATE_SEASON,
+      currentSeason: 1,
+    });
 
     document.title = 'Flixphilia | ' + currentSeries.name;
-  }, [currentSeries, dispatch]);
+
+    //eslint-disable-next-line
+  }, [loading]);
 
   return (
-    <Fragment>
-      <Hero />
-      <Description />
-      {/* <pre className="text-white">{JSON.stringify(currentSeries, null, 2)}</pre> */}
-    </Fragment>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Hero />
+          <Description />
+          {/* <pre className="text-white">{JSON.stringify(currentSeries, null, 2)}</pre> */}
+        </>
+      )}
+    </>
   );
 };
 

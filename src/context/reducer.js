@@ -1,8 +1,8 @@
-import { currentSeason, series } from './data';
+import { series } from './data';
 
 export const initialState = {
-  series: {},
-  currentSeason: currentSeason,
+  series: series,
+  currentSeason: 1,
 };
 
 export const actions = {
