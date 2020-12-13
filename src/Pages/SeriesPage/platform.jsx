@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const platformStyles = makeStyles({
   root: {
@@ -31,8 +31,8 @@ const platformStyles = makeStyles({
 
 const Platform = () => {
   const classes = platformStyles();
-  const [{ series }] = useStateValue();
-  const { platform } = series;
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+  const { platform } = currentSeries;
 
   return (
     <Box className={classes.root}>

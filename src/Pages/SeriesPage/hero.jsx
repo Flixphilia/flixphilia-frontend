@@ -1,7 +1,7 @@
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles/';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const heroStyles = makeStyles({
   root: {
@@ -17,9 +17,8 @@ const heroStyles = makeStyles({
 });
 
 const Hero = () => {
-  const [{ series }] = useStateValue();
-
-  const { name, imgUrl } = series;
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+  const { name, imgUrl } = currentSeries;
 
   const classes = heroStyles();
   return (

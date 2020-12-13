@@ -4,7 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import GridList from '@material-ui/core/GridList';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const castStyles = makeStyles({
   // root: {
@@ -54,8 +54,9 @@ const castStyles = makeStyles({
 
 const CastWrapper = () => {
   const classes = castStyles();
-  const [{ series }] = useStateValue();
-  const { cast } = series;
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+  const { cast } = currentSeries;
+
   return (
     <div className={classes.root}>
       <GridList cellHeight={240} className={classes.gridList} cols={4}>

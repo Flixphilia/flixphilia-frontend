@@ -1,7 +1,7 @@
 import Box from '@material-ui/core/Box';
 import Platform from './platform';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const posterStyles = makeStyles({
   poster: {
@@ -14,8 +14,9 @@ const posterStyles = makeStyles({
 
 const Poster = () => {
   const classes = posterStyles();
-  const [{ series, currentSeason }] = useStateValue();
-  const { name, seasons, specials } = series;
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+  const [currentSeason] = useLocalStorage('currentSeason', 1);
+  const { name, seasons, specials } = currentSeries;
   let season = specials ? currentSeason : currentSeason - 1;
   const { poster_path } = seasons[season];
 

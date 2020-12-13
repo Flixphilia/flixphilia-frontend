@@ -1,7 +1,7 @@
 import Box from '@material-ui/core/Box';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const genreStyles = makeStyles({
   root: {
@@ -17,8 +17,10 @@ const genreStyles = makeStyles({
 
 const Genre = () => {
   const classes = genreStyles();
-  const [{ series }] = useStateValue();
-  const { genre } = series;
+
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+
+  const { genre } = currentSeries;
   return (
     <Box display="flex" className={classes.root}>
       {genre.map(({ name }, idx) => (

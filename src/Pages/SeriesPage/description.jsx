@@ -1,5 +1,5 @@
 import Box from '@material-ui/core/Box';
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import CastWrapper from './castWrapper';
 import Container from '@material-ui/core/Container';
 import Genre from './genre';
@@ -8,11 +8,9 @@ import Info from './info';
 import Overview from './overview';
 import Poster from './poster';
 import SeasonButtonWrapper from './seasonButtonWrapper';
-import { actions } from '../../context/reducer';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
-import { useStateValue } from '../../context/StateProvider';
-
+import { useHistory, useParams } from 'react-router-dom';
+import useLocalStorage from '../../hooks/useLocalStorage';
 // import useCountRenders from '../../hooks/useCountRenders';
 
 const descriptionStyles = makeStyles((theme) => ({
@@ -29,13 +27,15 @@ const descriptionStyles = makeStyles((theme) => ({
 const Description = () => {
   const history = useHistory();
   const classes = descriptionStyles();
-  const [{ series, currentSeason }, dispatch] = useStateValue();
+  const { series, season } = useParams();
+
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+  const [currentSeason, setCurrentSeason] = useLocalStorage('currentSeason', 1);
 
   const onCurrentSeasonChange = (newSeason) => {
-    dispatch({
-      type: actions.UPDATE_SEASON,
-      season: newSeason,
-    });
+    if (newSeason === currentSeason) return;
+    setCurrentSeason(newSeason);
+    history.replace(`/series/${series}/${newSeason}`);
   };
 
   return (
@@ -46,7 +46,7 @@ const Description = () => {
         <Box className={classes.dataBox}>
           <Heading />
           <Info />
-          {series.seasons.map(({ season_number }) => (
+          {currentSeries.seasons.map(({ season_number }) => (
             <SeasonButtonWrapper
               key={season_number}
               seasonNumber={season_number}
@@ -58,7 +58,7 @@ const Description = () => {
           <CastWrapper />
           <Button
             onClick={() => {
-              history.push(`/quiz/${series.name}/${currentSeason}`);
+              history.push(`/quiz/${series}/${season}`);
             }}
           >
             Quiz

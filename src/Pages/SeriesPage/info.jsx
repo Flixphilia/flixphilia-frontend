@@ -1,6 +1,6 @@
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const infoStyles = makeStyles({
   root: {
@@ -18,9 +18,19 @@ const infoStyles = makeStyles({
 
 const Info = () => {
   const classes = infoStyles();
-  const [{ series, currentSeason }] = useStateValue();
-  const { seasons, origin_country, ratings, language, specials } = series;
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+  const [currentSeason] = useLocalStorage('currentSeason', 1);
+
+  const {
+    seasons,
+    origin_country,
+    ratings,
+    language,
+    specials,
+  } = currentSeries;
+
   let season = specials ? currentSeason : currentSeason - 1;
+
   const { air_date, episode_count } = seasons[season];
 
   return (

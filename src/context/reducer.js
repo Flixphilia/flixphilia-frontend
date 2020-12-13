@@ -1,7 +1,5 @@
-import { series } from './data';
-
 export const initialState = {
-  series: series,
+  currentSeries: {},
   currentSeason: 1,
 };
 
@@ -18,9 +16,8 @@ export const reducer = (state, action) => {
     case actions.UPDATE_SERIES: {
       newState = {
         ...state,
-        series: action.series,
+        currentSeries: action.series,
       };
-      setLocalStorage(state);
       return newState;
     }
 
@@ -30,18 +27,12 @@ export const reducer = (state, action) => {
         ...state,
         currentSeason: action.season,
       };
-      setLocalStorage(state);
       return newState;
     }
 
     default: {
       newState = state;
-      setLocalStorage(state);
       return newState;
     }
   }
-};
-
-const setLocalStorage = (state) => {
-  localStorage.setItem('flixphilia-data', JSON.stringify(state));
 };

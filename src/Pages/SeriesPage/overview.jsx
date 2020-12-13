@@ -1,6 +1,6 @@
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const overviewStyles = makeStyles({
   overview: {
@@ -10,10 +10,13 @@ const overviewStyles = makeStyles({
 
 const Overview = () => {
   const classes = overviewStyles();
-  const [{ series, currentSeason }] = useStateValue();
-  const { description, seasons, specials } = series;
+  const [currentSeries] = useLocalStorage('currentSeries', {});
+  const [currentSeason] = useLocalStorage('currentSeason', 1);
+  const { description, seasons, specials } = currentSeries;
+
   let season = specials ? currentSeason : currentSeason - 1;
   const { overview } = seasons[season];
+
   return (
     <Typography
       component="span"

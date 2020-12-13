@@ -1,17 +1,13 @@
 import Button from '@material-ui/core/Button';
-import { useStateValue } from '../../context/StateProvider';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const SeasonButtonWrapper = ({ seasonNumber, onCurrentSeasonChange }) => {
-  const [{ currentSeason }] = useStateValue();
+  const [currentSeason] = useLocalStorage('currentSeason', seasonNumber);
 
   return (
     <Button
       style={{ color: seasonNumber === currentSeason ? 'green' : 'white' }}
-      onClick={() => {
-        if (seasonNumber !== currentSeason) {
-          onCurrentSeasonChange(seasonNumber);
-        }
-      }}
+      onClick={() => onCurrentSeasonChange(seasonNumber)}
     >
       {seasonNumber}
     </Button>
