@@ -17,7 +17,7 @@ const App = () => {
           <CssBaseline />
           <NavBar />
           <Routes />
-          <Footer />
+          {/* <Footer /> */}
         </Router>
       </ThemeProvider>
     </StateProvider>

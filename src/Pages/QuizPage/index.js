@@ -8,6 +8,7 @@ import useCountRenders from '../../hooks/useCountRenders';
 import Container from '@material-ui/core/Container';
 import { useEffect } from 'react';
 import Loader from '../../components/loader';
+import LinearDeterminate from './linearProgress';
 
 const QuizPage = () => {
   const { series, season } = useParams();
@@ -33,11 +34,14 @@ const QuizPage = () => {
       {loading || completed ? (
         <Loader />
       ) : (
-        <TypeForm onSubmit={handleSubmit} showReviewView={false}>
-          {quizData.map((quiz, idx) => (
-            <QuizCard key={idx} quizData={quiz} />
-          ))}
-        </TypeForm>
+        <>
+          <LinearDeterminate />
+          <TypeForm onSubmit={handleSubmit} showReviewView={false}>
+            {quizData.map((quiz, idx) => (
+              <QuizCard key={idx} quizData={quiz} />
+            ))}
+          </TypeForm>
+        </>
       )}
     </Container>
   );
