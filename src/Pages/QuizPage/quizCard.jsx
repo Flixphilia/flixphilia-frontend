@@ -61,7 +61,6 @@ const QuizCard = ({ quizData }) => {
   const classes = useStyles();
   const [quizAnswer] = useLocalStorage('quizAnswer', []);
   const [value, setValue] = useState('');
-  const [attempt, setAttempt] = useState(false);
 
   const handleRadioChange = (event) => {
     setValue(event.target.value);
@@ -69,7 +68,7 @@ const QuizCard = ({ quizData }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setAttempt(true);
+    // setAttempt(true);
   };
 
   return (
