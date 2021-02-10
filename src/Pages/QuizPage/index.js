@@ -19,6 +19,7 @@ const QuizPage = () => {
 
   useEffect(() => {
     setQuizAnswer(quizData);
+    console.log(quizData, loading);
     //eslint-disable-next-line
   }, [quizData]);
 

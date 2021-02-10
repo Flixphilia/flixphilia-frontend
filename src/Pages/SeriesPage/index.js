@@ -11,6 +11,7 @@ const SeriesPage = () => {
   const { series } = useParams();
   const history = useHistory();
   const [seriesData, loading] = useGetSeriesData(series);
+
   //  eslint-disable-next-line
   const [currentSeries, setCurrentSeries] = useLocalStorage(
     'currentSeries',
@@ -22,6 +23,7 @@ const SeriesPage = () => {
   useEffect(() => {
     setCurrentSeries(seriesData);
     setCurrentSeason(1);
+    console.log(seriesData, loading);
     history.replace(`/series/${series}/1`);
     document.title = 'Flixphilia | ' + seriesData.name;
     //  eslint-disable-next-line
