@@ -1,6 +1,6 @@
 import { initialState, reducer } from './context/reducer';
 
-import Footer from './components/footer';
+// import Footer from './components/footer';
 import NavBar from './components/navBar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './Routes';
